@@ -1,0 +1,43 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Ilac Oneri Yönetici - Giris</title>
+    <!-- Custom styles for this template-->
+    <link href="{% static 'css/yoneticiGiris.css' %}" rel="stylesheet">
+
+</head>
+<body>
+    <div class="wrapper fadeInDown">
+        <div id="formContent">
+            <!-- Title -->
+            <h2 class="active"> İlaç Öneri Yönetici Girisi </h2>
+            
+            <form action="" method="POST">
+                {% csrf_token %}
+
+            <!-- Login Form -->
+            
+                <input type="text" id="username" class="fadeIn third" name="username" placeholder="Kullanıcı adı">
+                <input type="password" id="password" class="fadeIn third" name="password" placeholder="Şifre">
+                <input type="submit" class="fadeIn fourth" value="Log In">
+            </form>
+            {% if error_message %}
+            <div class="error-messages">
+                <p>{{ error_message }}</p>
+            </div>
+        {% endif %}
+
+            
+            
+        </div>
+    </div>
+</body>
+
+</html>

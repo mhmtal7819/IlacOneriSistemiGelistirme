@@ -1,0 +1,114 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Kullanıcı - Dashboard</title>
+    
+   
+    <!-- Custom fonts for this template-->
+    <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet">
+
+</head>
+
+<body id="page-top">
+
+    <div id="wrapper">
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- İlaçlar Bölümü -->
+                    <div class="row">
+                        <div class="col-lg-6 mb-4">
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold text-primary">İlaçlar</h6>
+                                </div>
+                                <div class="card-body">
+                                    <h1>İlaçlarım</h1>
+                                    {% if medications %}
+                                    <ul>
+                                        {% for name, active_ingredient, allergens in medications %}
+                                        <li>{{ name }} - Hasta Sikayeti: {{ active_ingredient }}, Alerjen Maddesi: {{ allergens }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                    {% else %}
+                                    <p>İlaç Seçilmedi.</p>
+                                    {% endif %}
+                                    <a href="/medReq/" class="btn btn-primary">İlaç Önerisi Al</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Kullanıcı Bilgileri -->
+                        <div class="col-lg-6 mb-4">
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold text-primary">Kullanıcı Bilgileri</h6>
+                                </div>
+                                <div class="card-body">
+                                    {% if user_profile %}
+                                    <h7>Hosgeldin, {{ user_profile.name }} {{ user_profile.surname }}  </h7><br>
+                                    <p><strong>Ad Soyad: </strong> {{ user_profile.name }} {{ user_profile.surname }}</p>
+                                    <p><strong>Yaş: </strong> {{ user_profile.age }}</p>
+                                    <p><strong>Boy: </strong> {{ user_profile.height }} cm</p>
+                                    <p><strong>Kilo: </strong> {{ user_profile.weight }} kg</p>
+                                    <p><strong>Cinsiyet:</strong> {{ user_profile.gender }}</p>
+                                    <p><strong>Vücut Kitle İndeksi (BMI):</strong> {{ user_profile.bmi|floatformat:2 }}</p>
+                                    {% if bmi_warning %}
+            <div class="alert alert-warning" role="alert">
+                {{ bmi_warning }}
+            </div>
+            {% endif %}
+
+                                    {% else %}
+                                    <p>Kullanıcı bilgileri yüklenemedi.</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="d-flex justify-content-between">
+                        <span>&copy; Ilac Oneri Sistemi 2024</span>
+                        <a href="/signout/" class="btn btn-secondary btn-sm">Çıkış Yap</a>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+</body>
+
+</html>

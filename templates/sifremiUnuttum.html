@@ -1,0 +1,49 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Ilac Oneri - Giris</title>
+    <!-- Custom styles for this template-->
+    <link href="{% static 'css/sifre.css' %}" rel="stylesheet">
+
+</head>
+<body>
+    <div class="wrapper fadeInDown">
+        <div id="formContent">
+            <!-- Title -->
+            <h2 class="active"> Şİfremi Unuttum </h2>
+            
+            <form action="" method="POST">
+                {% csrf_token %}
+
+            <!-- Login Form -->
+            
+                <input type="text" id="username" class="fadeIn third" name="username" placeholder="Kullanıcı adı">
+                <input type="password" id="password" class="fadeIn third" name="password" placeholder="Şifre">
+                <input type="password" id="password2" class="fadeIn third" name="password2" placeholder="Şifre Onayla">
+                <input type="submit" class="fadeIn fourth" value="Şifremi Yenile">
+            </form>
+            {% if error_message %}
+            <div class="error-messages">
+                <p>{{ error_message }}</p>
+            </div>
+        {% endif %}
+
+            <!-- Remind Password -->
+            <div id="formFooter">
+                <a class="underlineHover" href="{% url 'login' %}">Giriş</a>
+            </div>
+            <div id="formFooter">
+                <a class="underlineHover" href="{% url 'register' %}">Hesabınız yok mu?</a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

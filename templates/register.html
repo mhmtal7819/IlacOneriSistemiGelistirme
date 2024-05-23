@@ -1,0 +1,87 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ilac Oneri - Kayıt Ol </title> 
+    <link href="{% static 'css/register.css' %}" rel="stylesheet">
+</head>
+<body>
+<div class="wrapper">
+    <h2>Yeni Kayıt</h2>
+    <form action="/register/" method="POST">
+      {% csrf_token %}
+     <div class="input-box">
+        <input type="text" id="name" name="name" placeholder="Adınızı Giriniz" required>
+      </div>
+      <div class="input-box">
+        <input type="text" id="surname" name="surname" placeholder="Soyadınızı Giriniz" required>
+      </div>
+      <div class="input-box">
+        <input type="text" id="age" name="age" placeholder="Yaşınızı Giriniz" required>
+      </div>
+      <div class="input-box">
+        <input type="text" id="height" name="height" placeholder="Boy uzunluğunuzu (cm) Giriniz" required>
+      </div>
+      <div class="input-box">
+        <input type="text" id="weight" name="weight" placeholder="Kilonuzu (kg) Giriniz" required>
+      </div>
+      <div class="input-box">
+        <select name="gender" required>
+          <option value="" disabled selected>Cinsiyetiniz</option>
+          <option value="Erkek">Erkek</option>
+          <option value="Kadın">Kadın</option>
+          <option value="Belirtmek İstemiyorum">Belirtmek İstemiyorum</option>
+        </select>
+      </div>
+      <div class="input-box">
+        <input type="text" id="username" name="username" placeholder="Kullanıcı Adınızı Giriniz" required>
+      </div>
+      <div class="input-box">
+        <input type="text" id="mail" name="mail" placeholder="Mailinizi Giriniz" required>
+      </div>
+      <div class="input-box">
+        <input type="password" id="password" name="password" placeholder="Şifre Oluşturun" required>
+      </div>
+      <div class="input-box">
+        <input type="password" id="password2" name="password2" placeholder="Şifre Onayla" required>
+      </div>
+      <div class="policy">
+        <input type="checkbox">
+        <h3>İlaçlar Tavsiye Niteliği Taşır Kullanmadan Önce Doktorunuza Danışınız</h3>
+      </div>
+      <div class="input-box button">
+        <input type="Submit" value="Kayıt Ol">
+      </div>
+      <div class="text">
+        <h3>Zaten Bir Hesabınız mı Var? <a href="{% url 'login' %}">Giriş Yap</a></h3>
+      </div>
+    </form>
+    {% if error_message %}
+            <div class="error-messages">
+                <p>{{ error_message }}</p>
+            </div>
+        {% endif %}
+</div>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+      const form = document.querySelector("form");
+      form.addEventListener("submit", function(event) {
+          // Ad ve soyad inputlarını seç
+          let nameInput = document.getElementById('name');
+          let surnameInput = document.getElementById('surname');
+
+          // İlk harfi büyük yapma fonksiyonu
+          function capitalizeFirstLetter(string) {
+              return string.charAt(0).toUpperCase() + string.slice(1).lowercase();
+          }
+
+          // Ad ve soyad değerlerini düzenle
+          nameInput.value = capitalizeFirstLetter(nameInput.value);
+          surnameInput.value = capitalizeFirstLetter(surnameInput.value);
+      });
+  });
+  </script>
+</body>
+</html>
