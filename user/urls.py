@@ -14,5 +14,6 @@ urlpatterns = [
    path('returnIndex/', views.returnIndex, name='returnIndex'),
    path('medReq/', views.medReq, name='medReq'),
    path('data/', views.data, name='data'),
+   path('kullanici/', views.kullanici, name='kullanici'),
    
 ]

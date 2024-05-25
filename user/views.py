@@ -244,3 +244,4 @@ def data(request): #kullanılmıyor
         html_table = "Uygun ilaç bulunamadı."
 
     return render(request, 'data.html', {'html_table': html_table})
+
