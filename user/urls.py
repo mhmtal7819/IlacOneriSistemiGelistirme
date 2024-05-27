@@ -11,7 +11,7 @@ urlpatterns = [
    path('home/',views.home,name='home'), #url tanımlama kısmı
    path('bilgilerim/',views.bilgilerim,name='bilgilerim'), #url tanımlama kısmı
    path('ilaclarım/',views.ilaclarım,name='ilaclarım'), #url tanımlama kısmı
-   path('contact/',views.contact,name='contact'), #url tanımlama kısmı
+   
    path('register/',views.register,name='register'),
    path('bilgiGuncelle/',views.bilgiGuncelle,name='bilgiGuncelle'),
    path('index/',views.index,name='index'),

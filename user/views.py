@@ -166,8 +166,7 @@ def ilaclarım(request):
 
     
 
-def contact(request):
-    return render(request,'contact.html')
+
 
 def register(request): #kayıt
     if request.method == "POST":
