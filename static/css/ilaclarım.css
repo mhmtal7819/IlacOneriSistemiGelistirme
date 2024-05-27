@@ -1,0 +1,13 @@
+body {
+    font-family: 'Montserrat', sans-serif;
+}
+
+.card-header {
+    background-color: #7956ed;
+    color: #fff;
+}
+
+.table thead th {
+    background-color: #7956ed;
+    color: #fff;
+}

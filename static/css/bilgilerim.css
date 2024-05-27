@@ -1,0 +1,17 @@
+body {
+    font-family: 'Montserrat', sans-serif;
+}
+
+.card-header {
+    background-color: #7956ed;
+    color: #fff;
+}
+
+.card-body p {
+    font-size: 16px;
+}
+
+.alert {
+    font-size: 14px;
+    margin-top: 20px;
+}
