@@ -12,7 +12,6 @@ class User(models.Model):
         ('F', 'Kadın'),
         ('O', 'Diğer'),
     )
-    
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, verbose_name='Cinsiyet')
 
     def __str__(self):

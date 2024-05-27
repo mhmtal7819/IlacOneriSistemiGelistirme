@@ -20,5 +20,4 @@ urlpatterns = [
    path('medReq/', views.medReq, name='medReq'),
    path('data/', views.data, name='data'),
    
-   
 ]
