@@ -21,7 +21,7 @@ def login(request): #giris
             auth_login(request, user) #giris
             if username == 'yonetici':
                 return redirect('admin:index')  # Yönlendirme ismini doğru bir şekilde kullanıyoruz.
-            return redirect('index')
+            return redirect('home')
         
         else:
             error_message = "Kullanıcı adı veya şifre yanlış!"
@@ -69,6 +69,92 @@ def yoneticiGiris(request):
             error_message = "Kullanıcı adı veya şifre yanlış!"
             return render(request, 'yoneticiGiris.html', {'error_message': error_message})
     return render(request, 'yoneticiGiris.html')
+
+def home(request):
+    return render(request,'home.html')
+
+def bilgilerim(request):
+    try:
+        # request.user.username kullanarak özelleştirilmiş User modelinizden kullanıcıyı çekin
+        user_profile = User.objects.get(username=request.user.username)
+        user_auth = AuthUser.objects.get(username=request.user.username)
+        height_in_meters = user_profile.height / 100  # cm'den metreye çevir
+        bmi = user_profile.weight / (height_in_meters * height_in_meters)  # BMI hesaplama
+
+        # User modelinize bağlı UserMedication sorgusu ilaçları gösterme
+        user_medications = UserMedication.objects.filter(user=user_profile).select_related('medication')
+        medications = [
+            (um.medication.name, um.medication.active_ingredient, um.medication.allergens,
+             um.medication.kronik_rahatsizlik, um.medication.arac_kullanimi, um.medication.kullanım_suresi, um.medication.kullanım_talimatı)
+            for um in user_medications
+        ]
+
+        context = {
+            'user_profile': {
+                'name': user_profile.name,
+                'last_name': user_auth.last_name,
+                'height': user_profile.height,
+                'weight': user_profile.weight,
+                'age': user_profile.age,
+                'gender': user_profile.gender,
+                'bmi': bmi
+            },
+            'medications': medications,
+            'bmi_warning': None  # Varsayılan olarak uyarı yok
+        }
+        if bmi < 18.5:
+            context['bmi_warning'] = 'Dikkat, vücut kitle indeksiniz düşük!'
+        elif bmi > 25:
+            context['bmi_warning'] = 'Dikkat, vücut kitle indeksiniz yüksek!'
+        
+        return render(request, 'bilgilerim.html', context)
+    except User.DoesNotExist:
+        messages.error(request, "Kullanıcı bulunamadı.")
+        return render(request, 'bilgilerim.html', {'medications': []})
+
+def ilaclarım(request):
+    try:
+        # request.user.username kullanarak özelleştirilmiş User modelinizden kullanıcıyı çekin
+        user_profile = User.objects.get(username=request.user.username)
+        user_auth = AuthUser.objects.get(username=request.user.username)
+        height_in_meters = user_profile.height / 100  # cm'den metreye çevir
+        bmi = user_profile.weight / (height_in_meters * height_in_meters)  # BMI hesaplama
+
+        # User modelinize bağlı UserMedication sorgusu ilaçları gösterme
+        user_medications = UserMedication.objects.filter(user=user_profile).select_related('medication')
+        medications = [
+            (um.medication.name, um.medication.active_ingredient, um.medication.allergens,
+             um.medication.kronik_rahatsizlik, um.medication.arac_kullanimi, um.medication.kullanım_suresi, um.medication.kullanım_talimatı)
+            for um in user_medications
+        ]
+
+        context = {
+            'user_profile': {
+                'name': user_profile.name,
+                'last_name': user_auth.last_name,
+                'height': user_profile.height,
+                'weight': user_profile.weight,
+                'age': user_profile.age,
+                'gender': user_profile.gender,
+                'bmi': bmi
+            },
+            'medications': medications,
+            'bmi_warning': None  # Varsayılan olarak uyarı yok
+        }
+        if bmi < 18.5:
+            context['bmi_warning'] = 'Dikkat, vücut kitle indeksiniz düşük!'
+        elif bmi > 25:
+            context['bmi_warning'] = 'Dikkat, vücut kitle indeksiniz yüksek!'
+        
+        return render(request, 'ilaclarım.html', context)
+    except User.DoesNotExist:
+        messages.error(request, "Kullanıcı bulunamadı.")
+        return render(request, 'ilaclarım.html', {'medications': []})
+
+    
+
+def contact(request):
+    return render(request,'contact.html')
 
 def register(request): #kayıt
     if request.method == "POST":

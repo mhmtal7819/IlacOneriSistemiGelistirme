@@ -1,0 +1,61 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İlaçlarım</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'css/ilaclarım.css' %}">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="col-lg-12 mb-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold">İlaçlar</h6>
+                </div>
+                <div class="card-body">
+                    <h1 class="h4">İlaçlarım</h1>
+                    {% if medications %}
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>İlaç Adı</th>
+                                    <th>Etken Hastalık</th>
+                                    <th>Alerjen Madde</th>
+                                    <th>Kronik Rahatsızlık</th>
+                                    <th>Araç Kullanımı</th>
+                                    <th>Kullanım Süresi</th>
+                                    <th>Kullanım Talimatı</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for name, active_ingredient, allergens, kronik_rahatsizlik, arac_kullanimi, kullanım_suresi, kullanım_talimatı in medications %}
+                                <tr>
+                                    <td>{{ name }}</td>
+                                    <td>{{ active_ingredient }}</td>
+                                    <td>{{ allergens }}</td>
+                                    <td>{{ kronik_rahatsizlik }}</td>
+                                    <td>{{ arac_kullanimi|yesno:"Evet,Hayır" }}</td>
+                                    <td>{{ kullanım_suresi }}</td>
+                                    <td>{{ kullanım_talimatı }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p>İlaç Seçilmedi.</p>
+                    {% endif %}
+                    <a href="{% url 'medReq' %}" class="btn btn-primary mt-3">İlaç Önerisi Al</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
