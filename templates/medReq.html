@@ -11,6 +11,32 @@
    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
 </head>
 <body>
+    <!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="{% url 'home' %}">İlaç Öneri Sistemi</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'home' %}">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'bilgilerim' %}">Bilgilerim</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'ilaclarım' %}">İlaçlarım</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'medReq' %}">İlaç Önerisi</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#contact">Contact</a>
+            </li>
+        </ul>
+    </div>
+</nav>
     <div class="wrapper">
         <h2>İlaç Öneri</h2>
         <form action="/medReq/" method="POST">
@@ -54,7 +80,7 @@
         </div>
     </form>
     <div class="redirect-button">
-        <a href="/index/"><button type="button">Ana Sayfaya Dön</button></a>
+        <a href="/home/"><button type="button">Ana Sayfaya Dön</button></a>
     </div>
     {% if messages %}
     <div>

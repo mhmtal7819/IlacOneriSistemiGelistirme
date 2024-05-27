@@ -1,6 +1,7 @@
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from django.contrib.auth.models import User as AuthUser
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth import authenticate, login as auth_login, logout
 from django.contrib.auth.hashers import make_password
@@ -8,7 +9,9 @@ import pandas as pd
 #from .forms import SearchForm
 from .models import User,UserMedication,Medication
 from django.db import connection
+from django.utils import timezone
 from django.utils.timezone import now
+import datetime
 
 def login(request): #giris
     if request.method == 'POST':
@@ -116,17 +119,27 @@ def ilaclarım(request):
     try:
         # request.user.username kullanarak özelleştirilmiş User modelinizden kullanıcıyı çekin
         user_profile = User.objects.get(username=request.user.username)
-        user_auth = AuthUser.objects.get(username=request.user.username)
+        user_auth = request.user  # AuthUser yerine request.user kullanabilirsiniz
         height_in_meters = user_profile.height / 100  # cm'den metreye çevir
         bmi = user_profile.weight / (height_in_meters * height_in_meters)  # BMI hesaplama
 
         # User modelinize bağlı UserMedication sorgusu ilaçları gösterme
         user_medications = UserMedication.objects.filter(user=user_profile).select_related('medication')
-        medications = [
-            (um.medication.name, um.medication.active_ingredient, um.medication.allergens,
-             um.medication.kronik_rahatsizlik, um.medication.arac_kullanimi, um.medication.kullanım_suresi, um.medication.kullanım_talimatı)
-            for um in user_medications
-        ]
+        medications = []
+        for um in user_medications:
+            medication = um.medication
+            total_days = medication.kullanım_suresi.days
+            elapsed_days = (timezone.now().date() - um.date_suggested).days
+            remaining_days = total_days - elapsed_days
+            medications.append((
+                medication.name,
+                medication.active_ingredient,
+                medication.allergens,
+                medication.kronik_rahatsizlik,
+                medication.arac_kullanimi,
+                remaining_days,
+                medication.kullanım_talimatı
+            ))
 
         context = {
             'user_profile': {
@@ -202,6 +215,30 @@ def register(request): #kayıt
         return render(request, 'register.html')
 
     return render(request, 'register.html')
+
+@login_required
+def bilgiGuncelle(request):
+    try:
+        user_profile = User.objects.get(username=request.user.username)
+    except User.DoesNotExist:
+        messages.error(request, "Kullanıcı bulunamadı.")
+        return redirect('bilgilerim')
+
+    if request.method == 'POST':
+        user_profile.name = request.POST['name']
+        user_profile.last_name = request.POST['last_name']
+        user_profile.age = request.POST['age']
+        user_profile.height = request.POST['height']
+        user_profile.weight = request.POST['weight']
+        user_profile.gender = request.POST['gender']
+        user_profile.save()
+        messages.success(request, 'Bilgileriniz başarıyla güncellendi.')
+        return redirect('bilgilerim')
+
+    context = {
+        'user_profile': user_profile
+    }
+    return render(request, 'bilgiGuncelle.html', context)
 
 def index(request): #anasayfa
     if not request.user.is_authenticated:

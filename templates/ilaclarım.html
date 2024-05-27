@@ -8,7 +8,37 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="{% static 'css/ilaclarım.css' %}">
 </head>
-<body>
+<body class="w3-black">
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="{% url 'home' %}">İlaç Öneri Sistemi</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'home' %}">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'bilgilerim' %}">Bilgilerim</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'ilaclarım' %}">İlaçlarım</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'medReq' %}">İlaç Önerisi</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#contact">Contact</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<!-- Page Content -->
+<div class="w3-padding-large" id="main">
     <div class="container mt-5">
         <div class="col-lg-12 mb-4">
             <div class="card shadow mb-4">
@@ -27,19 +57,19 @@
                                     <th>Alerjen Madde</th>
                                     <th>Kronik Rahatsızlık</th>
                                     <th>Araç Kullanımı</th>
-                                    <th>Kullanım Süresi</th>
+                                    <th>Kalan Süre (Gün)</th>
                                     <th>Kullanım Talimatı</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for name, active_ingredient, allergens, kronik_rahatsizlik, arac_kullanimi, kullanım_suresi, kullanım_talimatı in medications %}
+                                {% for name, active_ingredient, allergens, kronik_rahatsizlik, arac_kullanimi, remaining_days, kullanım_talimatı in medications %}
                                 <tr>
                                     <td>{{ name }}</td>
                                     <td>{{ active_ingredient }}</td>
                                     <td>{{ allergens }}</td>
                                     <td>{{ kronik_rahatsizlik }}</td>
-                                    <td>{{ arac_kullanimi|yesno:"Evet,Hayır" }}</td>
-                                    <td>{{ kullanım_suresi }}</td>
+                                    <td>{{ arac_kullanimi|yesno:"Kullanabilir,Kullanamaz" }}</td>
+                                    <td>{{ remaining_days }}</td>
                                     <td>{{ kullanım_talimatı }}</td>
                                 </tr>
                                 {% endfor %}
@@ -54,8 +84,10 @@
             </div>
         </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

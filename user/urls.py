@@ -13,6 +13,7 @@ urlpatterns = [
    path('ilaclarım/',views.ilaclarım,name='ilaclarım'), #url tanımlama kısmı
    path('contact/',views.contact,name='contact'), #url tanımlama kısmı
    path('register/',views.register,name='register'),
+   path('bilgiGuncelle/',views.bilgiGuncelle,name='bilgiGuncelle'),
    path('index/',views.index,name='index'),
    path('signout/', views.signout, name='signout'),
    path('returnIndex/', views.returnIndex, name='returnIndex'),
