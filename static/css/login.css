@@ -65,9 +65,25 @@ h2 {
   border-radius: 0 0 10px 10px;
 }
 
+#password{
+  width: 383px;
+  height: 52px;
+}
+#password input{
+  width: 383px;
+  height: 52px;
+  background-color: #f6f6f6;
+  border: 2px solid #cccccc; /* Adjusted for visibility */
+  padding: 0; /* Adjust padding if needed */
+  box-sizing: border-box; /* Includes padding and border in the width and height */
+  display: block; /* To take full width as specified */
+  margin: auto; /* Center align if necessary */
+  text-align: center;
+  font-size: 16px;
+  color: #0d0d0d;
+}
 
 
-/* TABS */
 
 h2.inactive {
   color: #cccccc;
@@ -116,7 +132,7 @@ input[type=button]:active, input[type=submit]:active, input[type=reset]:active  
   transform: scale(0.95);
 }
 
-input[type=text] {
+input[type=text] , input[type=password] {
   background-color: #f6f6f6;
   border: none;
   color: #0d0d0d;
@@ -137,12 +153,38 @@ input[type=text] {
   border-radius: 5px 5px 5px 5px;
 }
 
-input[type=text]:focus {
+input[type=text], input[type=password] :focus {
   background-color: #fff;
   border-bottom: 2px solid #5fbae9;
 }
 
-input[type=text]:placeholder {
+input[type=text], input[type=password] :placeholder {
+  color: #cccccc;
+}
+
+input[type="text"], input[type="password"] {
+  background-color: #f6f6f6;
+  border: none;
+  color: #0d0d0d;
+  padding: 15px 32px;
+  text-align: center;
+  display: inline-block;
+  font-size: 16px;
+  margin: 5px;
+  width: 85%;
+  border: 2px solid #f6f6f6;
+  -webkit-transition: all 0.5s ease-in-out;
+  transition: all 0.5s ease-in-out;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+}
+
+input[type="text"]:focus, input[type="password"]:focus {
+  background-color: #fff;
+  border-bottom: 2px solid #5fbae9;
+}
+
+input[type="text"]::placeholder, input[type="password"]::placeholder {
   color: #cccccc;
 }
 
