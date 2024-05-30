@@ -12,6 +12,9 @@ from django.db import connection
 from django.utils import timezone
 from django.utils.timezone import now
 import datetime
+from django.contrib.auth import get_user_model
+
+
 
 def login(request): #giris
     if request.method == 'POST':
@@ -114,58 +117,44 @@ def bilgilerim(request):
     except User.DoesNotExist:
         messages.error(request, "Kullanıcı bulunamadı.")
         return render(request, 'bilgilerim.html', {'medications': []})
+    
+AuthUser = get_user_model()
 
 def ilaclarım(request):
     try:
-        # request.user.username kullanarak özelleştirilmiş User modelinizden kullanıcıyı çekin
         user_profile = User.objects.get(username=request.user.username)
-        user_auth = request.user  # AuthUser yerine request.user kullanabilirsiniz
-        height_in_meters = user_profile.height / 100  # cm'den metreye çevir
-        bmi = user_profile.weight / (height_in_meters * height_in_meters)  # BMI hesaplama
-
-        # User modelinize bağlı UserMedication sorgusu ilaçları gösterme
         user_medications = UserMedication.objects.filter(user=user_profile).select_related('medication')
         medications = []
+        stop_use_messages = []  # List to hold stop use messages
+
         for um in user_medications:
             medication = um.medication
             total_days = medication.kullanım_suresi.days
             elapsed_days = (timezone.now().date() - um.date_suggested).days
-            remaining_days = total_days - elapsed_days
-            medications.append((
-                medication.name,
-                medication.active_ingredient,
-                medication.allergens,
-                medication.kronik_rahatsizlik,
-                medication.arac_kullanimi,
-                remaining_days,
-                medication.kullanım_talimatı
-            ))
+            remaining_days = max(0, total_days - elapsed_days)  # Ensure days do not go negative
+            
+            medications.append({
+                'name': medication.name,
+                'active_ingredient': medication.active_ingredient,
+                'allergens': medication.allergens,
+                'chronic_condition': medication.kronik_rahatsizlik,
+                'driving_usage': medication.arac_kullanimi,
+                'remaining_days': remaining_days,
+                'usage_instructions': medication.kullanım_talimatı
+            })
+
+            # Adding a message if it's time to stop using the medication
+            if remaining_days == 0:
+                stop_use_messages.append(f"({medication.name}) ile olan tedavi süreciniz bitmiştir. Kullanmayı bırakabilirsiniz.")
 
         context = {
-            'user_profile': {
-                'name': user_profile.name,
-                'last_name': user_auth.last_name,
-                'height': user_profile.height,
-                'weight': user_profile.weight,
-                'age': user_profile.age,
-                'gender': user_profile.gender,
-                'bmi': bmi
-            },
             'medications': medications,
-            'bmi_warning': None  # Varsayılan olarak uyarı yok
+            'stop_use_messages': stop_use_messages
         }
-        if bmi < 18.5:
-            context['bmi_warning'] = 'Dikkat, vücut kitle indeksiniz düşük!'
-        elif bmi > 25:
-            context['bmi_warning'] = 'Dikkat, vücut kitle indeksiniz yüksek!'
-        
         return render(request, 'ilaclarım.html', context)
     except User.DoesNotExist:
         messages.error(request, "Kullanıcı bulunamadı.")
         return render(request, 'ilaclarım.html', {'medications': []})
-
-    
-
 
 
 def register(request): #kayıt
