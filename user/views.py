@@ -128,7 +128,9 @@ def ilaclarım(request):
         user_profile = User.objects.get(username=request.user.username)
         user_medications = UserMedication.objects.filter(user=user_profile).select_related('medication')
         medications = []
-        stop_use_messages = []
+        stop_use_messages = []  # List to hold stop use messages
+        driving_messages = []  # List to hold driving messages
+        chronic_warnings = []  # List to hold chronic condition warnings
 
         for um in user_medications:
             medication = um.medication
@@ -137,27 +139,41 @@ def ilaclarım(request):
             remaining_days = max(0, total_days - elapsed_days)  # Ensure days do not go negative
             
             medications.append({
-                'user_medication_id': um.id,
                 'name': medication.name,
                 'active_ingredient': medication.active_ingredient,
                 'allergens': medication.allergens,
                 'chronic_condition': medication.kronik_rahatsizlik,
                 'driving_usage': medication.arac_kullanimi,
                 'remaining_days': remaining_days,
-                'usage_instructions': medication.kullanım_talimatı
+                'usage_instructions': medication.kullanım_talimatı,
+                'user_medication_id': um.id,
             })
 
+            # Adding a message if it's time to stop using the medication
             if remaining_days == 0:
                 stop_use_messages.append(f"({medication.name}) ile olan tedavi süreciniz bitmiştir. Kullanmayı bırakabilirsiniz.")
+            
+            # Adding a driving usage message
+            if medication.arac_kullanimi:
+                driving_messages.append(f"({medication.name}) ilacını kullanırken araç kullanabilirsiniz.")
+            else:
+                driving_messages.append(f"({medication.name}) ilacını kullanırken araç kullanamazsınız.")
+            
+            # Adding a chronic condition warning message
+            if medication.kronik_rahatsizlik:
+                chronic_warnings.append(f"({medication.name}) ilacını {medication.kronik_rahatsizlik} kronik rahatsızlığınız varsa dikkatli kullanınız.")
 
         context = {
             'medications': medications,
-            'stop_use_messages': stop_use_messages
+            'stop_use_messages': stop_use_messages,
+            'driving_messages': driving_messages,
+            'chronic_warnings': chronic_warnings,
         }
         return render(request, 'ilaclarım.html', context)
     except User.DoesNotExist:
         messages.error(request, "Kullanıcı bulunamadı.")
         return render(request, 'ilaclarım.html', {'medications': []})
+
 
 
 

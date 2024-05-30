@@ -96,12 +96,33 @@
                 </div>
             </div>
         </div>
+
         <!-- Display stop use messages -->
-        <div class="alert alert-warning" role="alert">
-            {% for message in stop_use_messages %}
-            <p>{{ message }}</p>
-            {% endfor %}
-        </div>
+        {% if stop_use_messages %}
+            <div class="alert alert-warning" role="alert">
+                {% for message in stop_use_messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        <!-- Display driving messages -->
+        {% if driving_messages %}
+            <div class="alert alert-info" role="alert">
+                {% for message in driving_messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        <!-- Display chronic condition warnings -->
+        {% if chronic_warnings %}
+            <div class="alert alert-danger" role="alert">
+                {% for message in chronic_warnings %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
     </div>
 </div>
 
