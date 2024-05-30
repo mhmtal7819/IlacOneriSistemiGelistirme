@@ -1,4 +1,4 @@
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.http import HttpResponse
 from django.contrib.auth.models import User as AuthUser
 from django.contrib.auth.decorators import login_required
@@ -6,13 +6,14 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login as auth_login, logout
 from django.contrib.auth.hashers import make_password
 import pandas as pd
-#from .forms import SearchForm
-from .models import User,UserMedication,Medication
+from .models import User, UserMedication, Medication
 from django.db import connection
 from django.utils import timezone
 from django.utils.timezone import now
 import datetime
 from django.contrib.auth import get_user_model
+from django.shortcuts import get_list_or_404
+
 
 
 
@@ -120,12 +121,14 @@ def bilgilerim(request):
     
 AuthUser = get_user_model()
 
+
+@login_required
 def ilaclarım(request):
     try:
         user_profile = User.objects.get(username=request.user.username)
         user_medications = UserMedication.objects.filter(user=user_profile).select_related('medication')
         medications = []
-        stop_use_messages = []  # List to hold stop use messages
+        stop_use_messages = []
 
         for um in user_medications:
             medication = um.medication
@@ -134,6 +137,7 @@ def ilaclarım(request):
             remaining_days = max(0, total_days - elapsed_days)  # Ensure days do not go negative
             
             medications.append({
+                'user_medication_id': um.id,
                 'name': medication.name,
                 'active_ingredient': medication.active_ingredient,
                 'allergens': medication.allergens,
@@ -143,7 +147,6 @@ def ilaclarım(request):
                 'usage_instructions': medication.kullanım_talimatı
             })
 
-            # Adding a message if it's time to stop using the medication
             if remaining_days == 0:
                 stop_use_messages.append(f"({medication.name}) ile olan tedavi süreciniz bitmiştir. Kullanmayı bırakabilirsiniz.")
 
@@ -155,6 +158,21 @@ def ilaclarım(request):
     except User.DoesNotExist:
         messages.error(request, "Kullanıcı bulunamadı.")
         return render(request, 'ilaclarım.html', {'medications': []})
+
+
+
+
+@login_required
+def delete_medication(request, user_medication_id):
+    user_medication = get_object_or_404(UserMedication, id=user_medication_id)
+    
+    if request.method == 'POST':
+        user_medication.delete()
+        messages.success(request, 'İlaç başarıyla silindi.')
+        return redirect('ilaclarım')
+    
+    # Render a confirmation page (optional)
+    return render(request, 'ilaclarım.html', {'medications': [], 'stop_use_messages': [], 'confirmation_needed': True, 'user_medication_id': user_medication_id})
 
 
 def register(request): #kayıt

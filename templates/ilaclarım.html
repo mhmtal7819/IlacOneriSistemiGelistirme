@@ -41,6 +41,15 @@
 <!-- Page Content -->
 <div class="w3-padding-large" id="main">
     <div class="container mt-5">
+        <!-- Display messages -->
+        {% if messages %}
+            <div class="alert alert-info" role="alert">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
         <div class="col-lg-12 mb-4">
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
@@ -57,6 +66,7 @@
                                 <th>Araç Kullanımı</th>
                                 <th>Kalan Günler</th>
                                 <th>Kullanım Talimatları</th>
+                                <th>İşlemler</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -69,10 +79,16 @@
                                 <td>{{ medication.driving_usage|yesno:"Evet,Hayır" }}</td>
                                 <td>{{ medication.remaining_days }}</td>
                                 <td>{{ medication.usage_instructions }}</td>
+                                <td>
+                                    <form method="post" action="{% url 'delete_medication' medication.user_medication_id %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-danger">Sil</button>
+                                    </form>
+                                </td>
                             </tr>
                             {% empty %}
                             <tr>
-                                <td colspan="7">İlaç bulunamadı.</td>
+                                <td colspan="8">İlaç bulunamadı.</td>
                             </tr>
                             {% endfor %}
                         </tbody>
