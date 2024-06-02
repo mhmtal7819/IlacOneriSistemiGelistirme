@@ -1,13 +1,12 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kullanıcı Bilgileri</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="{% static 'css/bilgilerim.css' %}">
-    
 </head>
 <body class="w3-black">
 
@@ -31,7 +30,6 @@
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'medReq' %}">İlaç Önerisi</a>
             </li>
-            
         </ul>
     </div>
 </nav>
@@ -42,16 +40,36 @@
         <div class="col-lg-12 mb-4">
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold">Kullanıcı Bilgileri</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">Kullanıcı Bilgileri</h6>
                 </div>
                 <div class="card-body">
                     {% if user_profile %}
-                    <p><strong>Ad Soyad: </strong> {{ user_profile.name }} {{ user_profile.last_name }}</p>
-                    <p><strong>Yaş: </strong> {{ user_profile.age }}</p>
-                    <p><strong>Boy: </strong> {{ user_profile.height }} cm</p>
-                    <p><strong>Kilo: </strong> {{ user_profile.weight }} kg</p>
-                    <p><strong>Cinsiyet:</strong> {{ user_profile.gender }}</p>
-                    <p><strong>Vücut Kitle İndeksi (BMI):</strong> {{ user_profile.bmi|floatformat:2 }}</p>
+                    <table class="table table-bordered">
+                        <tr>
+                            <th>Ad Soyad</th>
+                            <td>{{ user_profile.name }} {{ user_profile.last_name }}</td>
+                        </tr>
+                        <tr>
+                            <th>Yaş</th>
+                            <td>{{ user_profile.age }}</td>
+                        </tr>
+                        <tr>
+                            <th>Boy</th>
+                            <td>{{ user_profile.height }} cm</td>
+                        </tr>
+                        <tr>
+                            <th>Kilo</th>
+                            <td>{{ user_profile.weight }} kg</td>
+                        </tr>
+                        <tr>
+                            <th>Cinsiyet</th>
+                            <td>{{ user_profile.gender }}</td>
+                        </tr>
+                        <tr>
+                            <th>Vücut Kitle İndeksi (BMI)</th>
+                            <td>{{ user_profile.bmi|floatformat:2 }}</td>
+                        </tr>
+                    </table>
                     {% if bmi_warning %}
                     <div class="alert alert-warning" role="alert">
                         {{ bmi_warning }}
@@ -61,8 +79,8 @@
                     <p>Kullanıcı bilgileri yüklenemedi.</p>
                     {% endif %}
                 </div>
-                <div class="redirect-button">
-                    <a href="/bilgiGuncelle/"><button type="button">Bilgileri Güncelle</button></a>
+                <div class="redirect-button text-center mb-4">
+                    <a href="/bilgiGuncelle/" class="btn btn-primary">Bilgileri Güncelle</a>
                 </div>
             </div>
         </div>

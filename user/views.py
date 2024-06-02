@@ -136,7 +136,8 @@ def ilaclarım(request):
             medication = um.medication
             total_days = medication.kullanım_suresi.days
             elapsed_days = (timezone.now().date() - um.date_suggested).days
-            remaining_days = max(0, total_days - elapsed_days)  # Ensure days do not go negative
+            kullanilan_gun = elapsed_days - total_days
+            remaining_days = 14 - kullanilan_gun  # Ensure days do not go negativee
             
             medications.append({
                 'name': medication.name,
@@ -326,14 +327,23 @@ def get_dataframe_from_sqlite():
         'name': 'İlaç Adı',
         'active_ingredient': 'Hastalık',
         'allergens': 'Etken Madde',
-        'chronic_condition': 'Kronik Rahatsızlık',
-        'driving_usage': 'Araç Kullanımı'
+        'kronik_rahatsizlik': 'Kronik Rahatsızlık',
+        'arac_kullanimi': 'Araç Kullanımı',
+        'kullanım_suresi': 'Kullanım Süresi (Gün)',
+        'kullanım_talimatı': 'Kullanım Talimatı'
     }, inplace=True)
+    
+    # Convert 'Kullanım Süresi (Gün)' from seconds to days
+    df['Kullanım Süresi (Gün)'] = df['Kullanım Süresi (Gün)'].apply(lambda x: x // (24 * 3600))
+    df['Araç Kullanımı'] = df['Araç Kullanımı'].apply(lambda x: 'Kullanabilir' if x else 'Kullanamaz')
+    
+    
     return df
+
 
 def medReq(request):
     # Sorgu parametrelerini başlatma
-    hastaliklar = request.POST.getlist('hastalik[]')  # Daha önce 'hastalik' olarak aldığınız yerde listeyi doğru şekilde almak için getlist kullanın.
+    hastaliklar = request.POST.getlist('hastalik[]')
     alerjenler = request.POST.getlist('alerjen[]')
     secilen_ilac = request.POST.get('secilen_ilac', None)
     
@@ -355,7 +365,7 @@ def medReq(request):
     if request.method == "POST":
         if hastaliklar:
             ilaclar_df = get_dataframe_from_sqlite()
-            filter = ilaclar_df['Hastalık'].isin(hastaliklar)  # hastaliklar listesini doğru şekilde kullanın
+            filter = ilaclar_df['Hastalık'].isin(hastaliklar)
             if alerjenler and 'Alerjim Yok' not in alerjenler:
                 filter &= ~ilaclar_df['Etken Madde'].apply(lambda x: any(alerjen in x for alerjen in alerjenler))
             uygun_ilaclar = ilaclar_df[filter]
@@ -374,7 +384,6 @@ def medReq(request):
             return render(request, 'medReq.html', {'error': 'İlaç onaylandı.'})
 
     return render(request, 'medReq.html', context)
-
 
 
 def data(request): #kullanılmıyor
